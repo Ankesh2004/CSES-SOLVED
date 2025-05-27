@@ -57,7 +57,7 @@ void solve() {
     for(auto it:occupied)cout<<it<<" ";
     cout<<'\n';
 }
- 
+
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
