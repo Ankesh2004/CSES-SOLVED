@@ -14,29 +14,15 @@ ll mod = 1e9 + 7;
 ll MAXN=1e6;
 void solve(){
     ll n;cin>>n;
-    vector<ll>v(n),p(n,0),s(n,0);
+    vector<ll>v(n);
+    ll sum=0;
     fri(n){
         cin>>v[i];
+        sum+=v[i];
     }
     sortv(v);
-    fri(n){
-        p[i]=v[i];s[i]=v[i];
-    }
-    fri(n-1){
-        p[i+1]+=p[i];
-    }
-    for(int i=n-2;i>=0;i--){
-        s[i]+=s[i+1];
-    }
-    ll ans=1e16;
-    if(n==1){
-        cout<<2*v[0]<<'\n';
-        return;
-    }
-    fri(n-1){
-        ans=min(ans,2*(max(p[i],s[i+1])));
-    }
-    cout<<ans<<'\n';
+    cout<<max(sum,2*v[n-1])<<'\n';
+
 }   
  
 int32_t main()
