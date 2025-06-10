@@ -13,30 +13,47 @@ using namespace std;
  
 const ll mod = 1e9 + 7;
 const ll MAXN = 1002;
+ll x;
+ll f(vector<vector<ll>>&dp,ll i,ll price,vector<ll>&h,vector<ll>&s){
+    if(i==h.size()){
+        return 0;
+    }
+    if(dp[i][price]!=-1){
+        return dp[i][price];
+    }
+    ll nottake=f(dp,i+1,price,h,s);
+    ll take=0;
+    if((h[i]+price)<=x){
+        take=s[i]+f(dp,i+1,price+h[i],h,s);
+    }
+    return dp[i][price]=max(nottake,take);
+}
  
-ll f(ll v,vector<vector<ll>>&dp){
-    if(v<=0){
-        if(v==0)return 0;
-        return 1e18;
+void solve() {
+    ll n,k;
+    cin>>n>>k;
+    x=k;
+    vector<ll>h(n),s(n);
+    fri(n){
+        cin>>h[i];
     }
-    if(dp[v]!=-1){
-        return dp[v];
+    fri(n){
+        cin>>s[i];
     }
-    ll steps=1e18;
-    string s=to_string(v);
-    for(auto c:s){
-        ll val=c-'0';
-        if(val>0){
-            steps=min(steps,1+f(v-val,dp));
+
+    // vector<vector<ll>>dp(n+1,vector<ll>(x+1,0));
+    // ll ans=f(dp,0,0,h,s);
+    // cout<<ans<<'\n';
+
+    vector<ll>dp(k+1,0);
+
+    for(int i=0;i<n;i++){
+        for(int j=k;j>=h[i];j--){
+            dp[j]=max(dp[j],dp[j-h[i]]+s[i]);
         }
     }
-    return dp[v]=steps;
-}
-void solve() {
-    ll n,k;cin>>n>>k;
-    vector<vector<ll>>dp(n+1,vector<ll>(n+1,-1));
-    ll ans=f(n,dp);
-    cout<<ans<<'\n';
+    cout<<dp[k]<<'\n';
+
 }
  
 int main(){
