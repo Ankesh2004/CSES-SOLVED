@@ -1,80 +1,65 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long int
-#define lld long double
 #define pb push_back
 #define ff first
 #define ss second
 #define fri(n) for (int i = 0; i < n; i++)
-#define sortv(v) sort((v).begin(), (v).end())
-#define printv(v, start_idx)                   \
-    for (int i = start_idx; i < v.size(); i++) \
-        cout << v[i] << " ";
- 
-const ll mod = 1e9 + 7;
-const ll MAXN = 1e5+6;
-
  
 void solve() {
-    ll n;cin>>n;
-    vector<vector<char>>v(n,vector<char>(n));
-    vector<vector<ll>>mv(n,vector<ll>(n,0));
-    vector<vector<pair<char,ll>>>dp(n,vector<pair<char,ll>>(n,{'Z',-1})); // {maxchar, first pos}
-    char c;
-    fri(n){
-        for(int j=0;j<n;j++){
-            cin>>v[i][j];
+    ll n; cin >> n;
+    vector<vector<char>> v(n, vector<char>(n));
+    fri(n) {
+        for (int j = 0; j < n; j++) {
+            cin >> v[i][j];
         }
     }
-    dp[0][0]={v[0][0],0};
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(i>0){
-                if(v[i][j]>dp[i-1][j].ff)dp[i][j]={v[i][j],i+j};
-                else dp[i][j]=dp[i-1][j];
 
-                mv[i][j]=1;
+    vector<pair<ll, ll>> curr;
+    curr.push_back({0, 0});
+    vector<vector<bool>> visited(n, vector<bool>(n, false));
+    visited[0][0] = true;
+
+    string ans = "";
+    ans += v[0][0];
+
+    while (!curr.empty()) {
+        vector<pair<char, pair<ll, ll>>> next_cells;
+
+        for (auto [x, y] : curr) {
+            if ((x + 1) < n && !visited[x + 1][y]) {
+                next_cells.push_back({v[x + 1][y], {x + 1, y}});
+                visited[x + 1][y] = true;
             }
-            if(j>0){
-                if(v[i][j]>dp[i][j-1].ff)dp[i][j]={v[i][j],i+j};
-                else dp[i][j]=dp[i][j-1];
+            if ((y + 1) < n && !visited[x][y + 1]) {
+                next_cells.push_back({v[x][y + 1], {x, y + 1}});
+                visited[x][y + 1] = true;
+            }
+        }
+
+        if (!next_cells.empty()) {
+            sort(next_cells.begin(), next_cells.end());
             
-                mv[i][j]=2;
-            }
-            if(i>0 && j>0){
-                if(dp[i-1][j].ff < dp[i][j-1].ff || (dp[i-1][j].ff==dp[i][j-1].ff && dp[i-1][j].ss < dp[i][j-1].ss)){
-                    mv[i][j]=1;
+            char nextc = next_cells[0].first;
+            ans += nextc;
+            
+            curr.clear();
+            for (auto& cell : next_cells) {
+                if (cell.first == nextc) {
+                    curr.push_back(cell.second);
                 }
-                else{
-                    mv[i][j]=2;
-                }
+                else break;
             }
-        }
+        } 
+        else break;
     }
 
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            cout<<dp[i][j].ff<<"-"<<dp[i][j].ss<<" ";
-        }
-        cout<<'\n';
-    }
-
-   string s="";
-   ll x=n-1,y=n-1;
-   while(x>=0 && y>=0){
-    s.pb(v[x][y]);
-    if(mv[x][y]==1){
-        x--;
-    }
-    else y--;
-   }
-   cout<<s<<'\n';
+    cout << ans;
 }
  
-int main(){
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
-    
     solve();
     return 0;
 }

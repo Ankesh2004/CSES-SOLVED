@@ -12,26 +12,29 @@ using namespace std;
         cout << v[i] << " ";
  
 const ll mod = 1e9 + 7;
-const ll MAXN = 1002;
- 
+const ll MAXN = 1e6+2;
+
+
+vector<vector<ll>>dp(MAXN,vector<ll>(2,0)); 
 void solve() {
     ll n;
     cin>>n;
 
-    vector<ll>dp(n+1,0);
-    dp[1]=2;
-
-    for(int i=2;i<=n;i++){
-        for(int x=1;x<=(i/2);x++){
-            dp[i]=(dp[i]+2*(dp[i-x]*dp[x]) % mod) % mod;
-        }
-    }
-    cout<<dp[n]<<'\n';
+    cout<<(dp[n-1][0]+dp[n-1][1])%mod<<'\n';
 }
  
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
+    // precompute
+    dp[0][0]=1;
+    dp[0][1]=1;
+
+    for(int i=1;i<MAXN;i++){
+        dp[i][0]=(dp[i][0]+2LL*dp[i-1][0]+dp[i-1][1])%mod;
+        dp[i][1]=(dp[i][1]+4LL*dp[i-1][1]+dp[i-1][0])%mod;
+    }
+
     ll t;cin>>t;
     fri(t)
     solve();

@@ -14,17 +14,22 @@ using namespace std;
 const ll mod = 1e9 + 7;
 const ll MAXN = 1e5 + 6;
 
-ll f(vector<vector<ll>> &dp, int i, int j, vector<ll> &v)
+ll f(vector<vector<ll>> &dp, int i, int j, vector<ll> &v,ll n)
 {
     if (i > j)
     {
-        return -1e18;
+        return 0;
     }
-    if (dp[i][j] != -1e16)
+    if(i==j){
+        return v[i];
+    }
+    if (dp[i][j]!=-1e16)
     {
         return dp[i][j];
     }
-    return dp[i][j] = max({dp[i][j], v[i] + f(dp, i + 1, j, v), v[j] + f(dp, i, j - 1, v)});
+    ll left=v[i]+min(f(dp,i+2,j,v,n),f(dp,i+1,j-1,v,n));
+    ll right =v[j]+min(f(dp,i+1,j-1,v,n),f(dp,i,j-2,v,n));
+    return dp[i][j]=max(left,right);
 }
 
 void solve()
@@ -36,7 +41,7 @@ void solve()
 
     vector<vector<ll>> dp(n + 1, vector<ll>(n + 1, -1e16));
 
-    ll ans = f(dp, 0, n - 1, v);
+    ll ans = f(dp, 0, n - 1, v,n);
     cout << ans << '\n';
 }
 

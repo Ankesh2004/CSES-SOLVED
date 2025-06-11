@@ -22,22 +22,26 @@ void solve()
     vector<ll>v(n);
     fri(n)cin>>v[i];
 
-    const int m = 20;
-    const int total = 1 << m; // 2^20
-    ll ans=0;
-    for (int mask = 0; mask < total; ++mask) {
-        bitset<20> b(mask);
-        ll sum=0;
-        for(int idx = 0; idx < 20; idx++){
-            if(b[idx]){
-                sum+=v[idx];
+    vector<pair<ll,ll>>dp((1<<n),{1e10,1e10});
+
+    dp[0]={1,0};
+
+    for(ll mask=1;mask<(1<<n);mask++){
+        for(ll i=0;i<n;i++){
+            if((1<<i)&mask){
+                ll lastone=(mask)^(1<<i);
+                ll occupied=dp[lastone].second;
+                if((occupied+v[i])<=w){
+                    dp[mask]=min(dp[mask],{dp[lastone].first,occupied+v[i]});
+                }
+                else{
+                    dp[mask]=min(dp[mask],{dp[lastone].first+1,v[i]});
+                }
             }
         }
-        if(sum<=w){
-            ans=max(ans,sum);
-        }
     }
-    cout<<ans<<'\n';
+    ll minrides=dp[(1<<n)-1].first;
+    cout<<minrides<<'\n';
 
 }
 
